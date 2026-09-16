@@ -1,0 +1,37 @@
+version: 1
+marketplace: US
+execution_mode: recommendation_only
+
+windows:
+  recent_days: 3
+  operating_baseline_days: 14
+  context_days: 30
+
+exploration:
+  allocation_reference:
+    discovery: 0.40
+    new_keyword_testing: 0.30
+    harvesting: 0.30
+  minimum_discovery_share: 0.25
+  protect_auto_broad_phrase: true
+
+optimization:
+  bid_first_for_inefficiency: true
+  deletion_requires_stronger_evidence: true
+  negative_requires_high_confidence: true
+  pause_requires_high_confidence: true
+  budget_change_requires_repeated_constraint: true
+
+safety:
+  approval_required: true
+  backend_mutation_allowed: false
+  dry_run_default: true
+  secrets_allowed_in_repo: false
+  require_reason_and_evidence: true
+  require_reversible_action_when_evidence_is_incomplete: true
+
+quality:
+  reject_stale_report: true
+  preserve_attribution_window: true
+  flag_missing_required_fields: true
+  compare_recent_vs_baseline: true
