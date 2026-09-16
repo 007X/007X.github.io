@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "amazon_ads_mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@latest",
+        "http://localhost:9080/mcp/",
+        "--allow-http"
+      ],
+      "env": {
+        "MCP_TIMEOUT": "120000",
+        "MCP_REQUEST_TIMEOUT": "60000",
+        "MCP_CONNECTION_TIMEOUT": "10000",
+        "MCP_SERVER_REQUEST_TIMEOUT": "60000",
+        "MCP_TOOL_TIMEOUT": "120000",
+        "MCP_REQUEST_WARNING_THRESHOLD": "10000"
+      }
+    }
+  }
+}
