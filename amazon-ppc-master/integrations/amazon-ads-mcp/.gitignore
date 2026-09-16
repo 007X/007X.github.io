@@ -1,0 +1,11 @@
+# Local secrets and runtime state
+.env
+.env.*
+!.env.example
+secrets/
+credentials/
+*.pem
+*.key
+*.crt
+*.p12
+*.token
