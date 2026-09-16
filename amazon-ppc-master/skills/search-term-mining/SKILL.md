@@ -1,88 +1,94 @@
 # Search Term Mining Skill
 
 ## Purpose
-Continuously expand the keyword pool from Amazon Ads search-term performance without turning exploration into an uncontrolled source of waste.
+Continuously expand useful keyword coverage from Amazon Ads search-term data while controlling inefficient spend without causing unnecessary keyword-pool shrinkage.
 
 ## Inputs
-Primary source:
-- Sponsored Products Search Term Report
+Use the normalized data contract from `integrations/amazon-ads-mcp/data-contract.md`.
 
-Supporting sources when available:
-- keyword/target report
-- campaign report
-- product conversion data
-- profit or margin data
+Required when available:
+- Search Term Report
+- Campaign / ad group context
+- Existing keyword / target inventory
+- Match type
+- Recent and longer-term performance
 
-Use 7-day and 14-day windows, with 30-day context. Preserve attribution-window semantics.
+Preferred windows:
+- discovery signal: 7 days
+- operating validation: 14 days
+- context: 30 days
 
-## Classification
-Classify search terms into:
+## Candidate Classes
+Classify every meaningful search term into one of four states:
 
 ### Harvest
-Evidence of repeatable conversion or strong commercial intent. Recommend moving proven demand into an intentional keyword/target structure when it is not already captured.
+The query has credible conversion evidence and is sufficiently relevant to become a structured keyword/target candidate in an appropriate harvesting campaign.
 
 ### Test
-Promising term with insufficient evidence for full harvesting. Recommend controlled testing using an appropriate match type and conservative starting bid.
+The query is relevant and promising but has limited evidence. Preserve it as an exploration candidate; do not treat limited data as a failure.
 
 ### Observe
-Interesting term with weak or incomplete evidence. Keep discovery active and avoid premature suppression.
+The query has mixed, weak, or immature evidence. Continue gathering data unless spend is clearly destructive or relevance is poor.
 
 ### Suppress
-Only when the term is clearly irrelevant, structurally destructive, or supported by strong repeated evidence of waste. A high ACOS number alone is insufficient.
+Use only when the query is clearly irrelevant, structurally harmful, or has accumulated strong negative evidence. High ACOS alone is insufficient.
 
-## Candidate Signals
-Consider:
-- orders
-- sales
+## Mining Logic
+1. Normalize search terms and preserve exact source evidence.
+2. Check whether the term is already represented in exact/phrase/broad or another target form.
+3. Detect converting terms that are not adequately represented in the keyword structure.
+4. Detect high-intent query patterns that deserve testing even before conversion proof is complete.
+5. Estimate incremental opportunity without assuming every successful query should be isolated immediately.
+6. Protect Auto/Broad/Phrase discovery paths from premature suppression.
+7. Deduplicate recommendations across campaigns and match types.
+8. Prefer controlled testing over removal when evidence is incomplete.
+
+## Spend Protection
+For non-converting terms, compare spend against configurable thresholds and conversion history. A term that is still exploratory should normally receive a bid/budget control recommendation before a negative recommendation.
+
+Do not create negatives solely because:
+- ACOS is temporarily high
+- one day is weak
+- click count is low
+- the term has not yet accumulated sufficient evidence
+
+## Keyword-Pool Preservation
+Track:
+- new search terms discovered
+- new keyword candidates
+- existing discovery coverage
+- negatives added
+- targets paused
+
+A mining cycle should report the net change in discovery capacity. If suppression materially outpaces useful expansion, flag the cycle for review rather than silently proceeding.
+
+## Output
+Return a ranked opportunity table and an approval queue.
+
+Each opportunity should contain:
+- search_term
+- campaign_id
+- ad_group_id
+- source_match_type
+- existing_target_status
+- classification: harvest | test | observe | suppress
 - spend
 - clicks
+- orders
+- sales
+- CTR
 - CPC
 - CVR
 - ACOS
-- ROAS
-- CTR
-- recurrence across multiple days
-- recurrence across campaigns/ad groups
-- commercial relevance
-- query-to-product relevance
-- match-type source
-- recent vs baseline performance
-
-A term can qualify for testing before it qualifies for harvesting.
-
-## Expansion Rules
-1. Preserve Auto/Broad/Phrase discovery paths.
-2. Prefer exact or phrase harvesting for proven demand when strategically appropriate.
-3. Do not duplicate a term blindly across overlapping campaigns; inspect existing coverage first.
-4. When a term is promising but unproven, use a lower-risk test rather than a full-scale launch.
-5. When mining from broad/auto traffic, keep the source campaign/ad group in the recommendation for traceability.
-6. Track rejected candidates so the same search term is not repeatedly proposed without new evidence.
-
-## Anti-Shrink Rule
-Search-term mining must never reduce the overall discovery pool merely to improve a short-term ACOS snapshot. Any negative or pause recommendation needs stronger evidence than a normal bid recommendation.
-
-## Output
-Return:
-1. New harvest candidates
-2. New test candidates
-3. Observe candidates
-4. Suppression candidates, with evidence threshold explicitly stated
-5. Existing coverage conflicts or duplicates
-6. Estimated opportunity and risk
-7. Execution queue
-
-Each candidate recommendation should include:
-- search_term
-- source campaign/ad group
-- current targeting status
-- proposed match type
-- proposed initial bid or action
-- evidence window
-- spend/click/order/sales metrics
+- evidence_window
+- recommendation
+- proposed_match_type
+- proposed_bid_if_applicable
 - rationale
-- expected effect
-- risk
+- confidence
 - approval_required=true
 
+For suppress recommendations, include the exact negative target form and stronger evidence than for bid reductions.
+
 ## Safety
-No keyword creation, negative targeting, bid change, pause, or campaign mutation is executed by this skill. It only returns structured recommendations for the Execution Gate.
+This skill only recommends additions, bid changes, negatives, pauses, or campaign moves. It must not mutate Amazon Ads backend state. All changes pass through the Execution Gate.
