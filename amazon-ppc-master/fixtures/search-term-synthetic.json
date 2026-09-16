@@ -1,0 +1,6 @@
+[
+  {"date":"2026-09-10","profile_id":"demo","campaign_id":"c-discovery","ad_group_id":"ag-1","search_term":"insulated lunch bag large","match_type":"auto","impressions":4200,"clicks":58,"spend":19.72,"orders":4,"sales":79.96},
+  {"date":"2026-09-10","profile_id":"demo","campaign_id":"c-discovery","ad_group_id":"ag-1","search_term":"lunch bag for work","match_type":"broad","impressions":2300,"clicks":31,"spend":13.02,"orders":2,"sales":39.98},
+  {"date":"2026-09-10","profile_id":"demo","campaign_id":"c-discovery","ad_group_id":"ag-1","search_term":"free lunch bag","match_type":"broad","impressions":900,"clicks":19,"spend":8.55,"orders":0,"sales":0},
+  {"date":"2026-09-10","profile_id":"demo","campaign_id":"c-discovery","ad_group_id":"ag-1","search_term":"lunch bag","match_type":"phrase","impressions":5100,"clicks":44,"spend":17.60,"orders":3,"sales":59.97}
+]
