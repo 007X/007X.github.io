@@ -1,0 +1,34 @@
+# Copy to a private runtime location; do not commit real account identifiers.
+marketplace: US
+region: na
+profile_id: "REPLACE_WITH_RUNTIME_SECRET_OR_ENV"
+currency: USD
+timezone: "REPLACE_WITH_PROFILE_TIMEZONE"
+
+optimization:
+  target_acos: null
+  target_roas: null
+  target_tacos: null
+  contribution_margin_pct: null
+  minimum_profit_per_order: null
+
+exploration:
+  exploration_pct: 0.40
+  new_keyword_test_pct: 0.30
+  harvesting_pct: 0.30
+  minimum_discovery_share_pct: 0.25
+
+risk:
+  mode: conservative
+  max_bid_change_pct: 0.20
+  max_budget_change_pct: 0.20
+  require_multi_day_evidence: true
+  suppress_requires_high_confidence: true
+  live_execution_enabled: false
+
+runtime:
+  default_window_days: 7
+  comparison_window_days: 14
+  context_window_days: 30
+  dry_run: true
+  approval_required: true
