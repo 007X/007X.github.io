@@ -1,0 +1,20 @@
+name: Amazon PPC Dry Run
+
+on:
+  push:
+    paths:
+      - 'amazon-ppc-master/**'
+  pull_request:
+    paths:
+      - 'amazon-ppc-master/**'
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: amazon-ppc-master/tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run synthetic PPC regression
+        run: python run_dry_run.py
